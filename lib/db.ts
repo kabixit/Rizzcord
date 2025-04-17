@@ -1,9 +1,13 @@
-import { PrismaClient } from "@prisma/client/extension";
+import { PrismaClient } from "@prisma/client"; // Fixed import path
 
 declare global {
-    var prisma: PrismaClient | undefined;
+  var prisma: PrismaClient | undefined;
 }
 
-export const db = globalThis.prisma || new PrismaClient();
+export const db = globalThis.prisma || new PrismaClient({
+  log: process.env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"]
+});
 
-if(process.env.NODE_ENV != "production") globalThis.prisma = db
+if (process.env.NODE_ENV !== "production") {
+  globalThis.prisma = db;
+}
